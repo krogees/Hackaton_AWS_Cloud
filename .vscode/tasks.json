@@ -1,0 +1,63 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "docker-build",
+			"label": "docker-build: debug",
+			"dependsOn": [
+				"build"
+			],
+			"dockerBuild": {
+				"tag": "hackatonawscloud:dev",
+				"target": "base",
+				"dockerfile": "${workspaceFolder}/Hackaton AWS 3/Source/postcard/Dockerfile",
+				"context": "${workspaceFolder}",
+				"pull": true
+			},
+			"netCore": {
+				"appProject": "${workspaceFolder}/Hackaton AWS 3/Source/postcard/postcard.csproj"
+			}
+		},
+		{
+			"type": "docker-build",
+			"label": "docker-build: release",
+			"dependsOn": [
+				"build"
+			],
+			"dockerBuild": {
+				"tag": "hackatonawscloud:latest",
+				"dockerfile": "${workspaceFolder}/Hackaton AWS 3/Source/postcard/Dockerfile",
+				"context": "${workspaceFolder}",
+				"platform": "linux/amd64",
+				"pull": true
+			},
+			"netCore": {
+				"appProject": "${workspaceFolder}/Hackaton AWS 3/Source/postcard/postcard.csproj"
+			}
+		},
+		{
+			"type": "docker-run",
+			"label": "docker-run: debug",
+			"dependsOn": [
+				"docker-build: debug"
+			],
+			"dockerRun": {},
+			"netCore": {
+				"appProject": "${workspaceFolder}/Hackaton AWS 3/Source/postcard/postcard.csproj",
+				"enableDebugging": true,
+				"configureSsl": false
+			}
+		},
+		{
+			"type": "docker-run",
+			"label": "docker-run: release",
+			"dependsOn": [
+				"docker-build: release"
+			],
+			"dockerRun": {},
+			"netCore": {
+				"appProject": "${workspaceFolder}/Hackaton AWS 3/Source/postcard/postcard.csproj"
+			}
+		}
+	]
+}
